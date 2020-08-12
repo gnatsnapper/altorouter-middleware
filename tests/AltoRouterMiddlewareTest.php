@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Gnatsnapper\Middleware\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\{ServerRequest,Response,Uri,Stream};
 use Laminas\Stratigility\MiddlewarePipe;
 use Gnatsnapper\Middleware\AltoRouterMiddleware;
 use AltoRouter;
+use stdClass, Exception, TypeError;
 
 use function Laminas\Stratigility\middleware;
 
@@ -17,7 +19,7 @@ final class AltoRouterMiddlewareTest extends TestCase
     protected function setUp(): void
     {
         //setup AltoRouter with callable returning Response Object
-        $this->altorouter = new AltoRouter();
+        $this->altorouter = new AltoRouterMiddleware();
         $this->altorouter->map(
             'GET',
             '/',
@@ -60,12 +62,26 @@ final class AltoRouterMiddlewareTest extends TestCase
             'string'
         );
 
+        $this->altorouter->map(
+            'GET',
+            '/named',
+            [$this,'namedFunction']
+        );
+
+
+        $this->altorouter->map(
+            'GET',
+            '/return',
+            function() {
+            return new stdClass();
+            }
+        );
 
         //Setup PSR-15 Handler
         $this->handler = new MiddlewarePipe();
 
         //Add AltoRouterMiddleware (class under test)
-        $this->handler->pipe(new AltoRouterMiddleware($this->altorouter));
+        $this->handler->pipe($this->altorouter);
 
         //Add fallback middleware
         $this->handler->pipe(middleware(function ($request, $handler) {
@@ -74,6 +90,13 @@ final class AltoRouterMiddlewareTest extends TestCase
             $r->getBody()->write('Not Found');
             return $r;
         }));
+    }
+
+    public function namedFunction(): ResponseInterface
+    {
+         $r = new Response();
+         $r->getBody()->write('namedFunction');
+         return $r;
     }
 
     public function testSimple(): void
@@ -108,13 +131,28 @@ final class AltoRouterMiddlewareTest extends TestCase
         $this->assertSame((string)$response->getBody(), 'contact');
     }
 
+
+    public function testNamedFunction(): void
+    {
+        $request = (new ServerRequest())->withUri(new Uri('/named'));
+        $response = $this->handler->handle($request);
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame((string)$response->getBody(), 'namedFunction');
+    }
+
     public function testNotCallable(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $request = (new ServerRequest())->withUri(new Uri('/string'));
         $response = $this->handler->handle($request);
     }
 
+    public function testNotReturningServerResponse(): void
+    {
+        $this->expectException(TypeError::class);
+        $request = (new ServerRequest())->withUri(new Uri('/return'));
+        $response = $this->handler->handle($request);
+    }
 
     public function testNotFound(): void
     {

@@ -5,29 +5,22 @@ declare(strict_types=1);
 namespace Gnatsnapper\Middleware;
 
 use AltoRouter;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\{ResponseFactoryInterface,ResponseInterface,ServerRequestInterface};
+use Psr\Http\Server\{MiddlewareInterface,RequestHandlerInterface};
+use function is_array,call_user_func_array;
 
-class AltoRouterMiddleware implements MiddlewareInterface
+class AltoRouterMiddleware extends AltoRouter implements MiddlewareInterface
 {
-
-    private AltoRouter $router;
-
-    public function __construct(AltoRouter $router)
-    {
-        $this->router = $router;
-    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
 
-        $match = $this->router->match($request->getUri()->getPath(), $request->getMethod());
+        $match = $this->match($request->getUri()->getPath(), $request->getMethod());
 
-        if (empty($match)) {
-            return $handler->handle($request);//No match so pass on to next middleware
+        if (empty($match['target'])) {
+
+            return $handler->handle($request); //No match so pass on to next middleware
+
         }
 
         if(!is_callable($match['target']))
@@ -37,7 +30,9 @@ class AltoRouterMiddleware implements MiddlewareInterface
 
         }
 
+        return call_user_func_array($match['target'],$match['params']);
 
-        return call_user_func_array($match['target'], $match['params']);
     }
+
+
 }
