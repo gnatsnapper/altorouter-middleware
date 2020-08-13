@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gnatsnapper/altorouter-middleware.svg?branch=master)](https://travis-ci.org/gnatsnapper/altorouter-middleware)
+
 # AltoRouter Middleware
 
 This class simply extends the venerable [AltoRouter](https://github.com/dannyvankooten/AltoRouter) class to allow use as a router/dispatcher.  If a route is not found the request is passed to the next middleware.  If a route is mapped the AltoRouter will produce a response, therefore the route must be a callable returning an object implementing Psr\Http\Message\ResponseInterface.
