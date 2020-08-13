@@ -1,6 +1,6 @@
 {
     "name": "gnatsnapper/altorouter-middleware",
-    "description": "",
+    "description": "A PSR-15 Middleware to allow the use of the venerable AltoRouter in Middleware-based PHP applications",
     "type": "library",
     "license": "GPL-3.0-or-later",
     "minimum-stability": "stable",
