@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/gnatsnapper/altorouter-middleware.svg?branch=master)](https://travis-ci.org/gnatsnapper/altorouter-middleware)
+![PHP Composer](https://github.com/gnatsnapper/altorouter-middleware/workflows/PHP%20Composer/badge.svg)
 
 # AltoRouter Middleware
 
