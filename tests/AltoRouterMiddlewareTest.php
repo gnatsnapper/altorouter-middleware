@@ -10,7 +10,9 @@ use Laminas\Diactoros\{ServerRequest,Response,Uri,Stream};
 use Laminas\Stratigility\MiddlewarePipe;
 use Gnatsnapper\Middleware\AltoRouterMiddleware;
 use AltoRouter;
-use stdClass, Exception, TypeError;
+use stdClass,
+
+Exception, TypeError;
 
 use function Laminas\Stratigility\middleware;
 
@@ -72,8 +74,8 @@ final class AltoRouterMiddlewareTest extends TestCase
         $this->altorouter->map(
             'GET',
             '/return',
-            function() {
-            return new stdClass();
+            function () {
+                return new stdClass();
             }
         );
 
