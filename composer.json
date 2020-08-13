@@ -1,4 +1,14 @@
 {
+    "name": "gnatsnapper/altorouter-middleware",
+    "description": "",
+    "type": "project",
+    "license": "GPL-3.0-or-later",
+    "keywords": [
+        "middleware",
+        "psr",
+        "psr-15"
+    ],
+
     "autoload": {
         "psr-4": {
     "Gnatsnapper\\Middleware\\": "src"
