@@ -1,7 +1,7 @@
 {
     "name": "gnatsnapper/altorouter-middleware",
     "description": "",
-    "type": "project",
+    "type": "library",
     "license": "GPL-3.0-or-later",
     "keywords": [
         "middleware",

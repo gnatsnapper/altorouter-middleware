@@ -3,8 +3,14 @@
 
 # AltoRouter Middleware
 
-This class simply extends the venerable [AltoRouter](https://github.com/dannyvankooten/AltoRouter) class to allow use as a router/dispatcher.  If a route is not found the request is passed to the next middleware.  If a route is mapped the AltoRouter will produce a response, therefore the route must be a callable returning an object implementing Psr\Http\Message\ResponseInterface.
+## Install
 
+```
+composer require gnatsnapper/altorouter-middleware
+```
+
+## Usage
+This class simply extends the venerable [AltoRouter](https://github.com/dannyvankooten/AltoRouter) class to allow use as a router/dispatcher.  If a route is not found the request is passed to the next middleware.  If a route is mapped the AltoRouter will produce a response, therefore the route must be a callable returning an object implementing Psr\Http\Message\ResponseInterface.
 
 ```php
 $altorouter = new AltoRouterMiddleware();
